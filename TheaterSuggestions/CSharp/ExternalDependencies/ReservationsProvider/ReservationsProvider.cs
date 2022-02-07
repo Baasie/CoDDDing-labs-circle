@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace ExternalDependencies.ReservationsProvider
 {
-    public class ReservationsProvider
+    public class ReservationsProvider : IProvideCurrentReservations
     {
         private readonly Dictionary<string, ReservedSeatsDto> _repository = new Dictionary<string, ReservedSeatsDto>();
 

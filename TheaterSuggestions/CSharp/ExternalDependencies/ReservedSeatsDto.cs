@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ExternalDependencies.ReservationsProvider
+namespace ExternalDependencies
 {
     public class ReservedSeatsDto
     {

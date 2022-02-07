@@ -6,3 +6,7 @@ Start implementing the tests using the ExternalDependencies 'AuditoriumSeatingAd
 You can find the states visualised in '../../AuditoriumLayoutExamples.md', use the corresponding ID to call the state.
 
 We won't be doing puristic TDD, as in we will use the domain model designed from the responsbility mapping to create objects which are the expression of our ubiqituous language in code. You can just create them in the TheatherSuggestions.Tests project and focus on passing the tests on our domain model. We deal with project structure in a later lab.
+
+# Lab 2
+
+We extracted our domain model to the 'SeatsSuggestions' project, and refactored our stub/fake mechanism int he Tests. Now it is time to implement the next test in 'SeatAllocatorShould' called 'Offer_several_suggestions_ie_1_per_PricingCategory_and_other_one_without_category_affinity' which fails. You need to find out why it failed, that is why we gave you a couple of unit tests to work with and find the bug!

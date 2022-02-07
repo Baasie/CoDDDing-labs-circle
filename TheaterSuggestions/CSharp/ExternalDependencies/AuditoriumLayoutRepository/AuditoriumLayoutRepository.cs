@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace ExternalDependencies.AuditoriumLayoutRepository
 {
-    public class AuditoriumLayoutRepository
+    public class AuditoriumLayoutRepository : IProvideAuditoriumLayouts
     {
         private readonly Dictionary<string, AuditoriumDto> _repository = new Dictionary<string, AuditoriumDto>();
 
@@ -45,7 +45,7 @@ namespace ExternalDependencies.AuditoriumLayoutRepository
 
         private static string GetExecutingAssemblyDirectoryFullPath()
         {
-            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var directoryName = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
 
             if (directoryName != null && directoryName.StartsWith(@"file:\"))
             {

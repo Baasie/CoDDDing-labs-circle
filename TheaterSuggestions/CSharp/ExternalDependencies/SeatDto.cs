@@ -1,4 +1,4 @@
-﻿namespace ExternalDependencies.AuditoriumLayoutRepository
+﻿namespace ExternalDependencies
 {
     public class SeatDto
     {

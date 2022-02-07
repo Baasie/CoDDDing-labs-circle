@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ExternalDependencies.AuditoriumLayoutRepository
+namespace ExternalDependencies
 {
     public class CorridorDto
     {

@@ -1,4 +1,4 @@
-﻿namespace SeatsSuggestions.Tests
+﻿namespace SeatsSuggestions
 {
     public enum PricingCategory
     {
