@@ -45,7 +45,7 @@ namespace ExternalDependencies.AuditoriumLayoutRepository
 
         private static string GetExecutingAssemblyDirectoryFullPath()
         {
-            var directoryName = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+            var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             if (directoryName != null && directoryName.StartsWith(@"file:\"))
             {

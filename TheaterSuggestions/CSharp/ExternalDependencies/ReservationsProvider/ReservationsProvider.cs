@@ -12,12 +12,12 @@ namespace ExternalDependencies.ReservationsProvider
         public ReservationsProvider()
         {
             var directoryName = $"{GetExecutingAssemblyDirectoryFullPath()}\\AuditoriumLayouts\\";
-            
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 directoryName = $"{GetExecutingAssemblyDirectoryFullPath()}/AuditoriumLayouts/";
             }
-            
+
 
             foreach (var fileFullName in Directory.EnumerateFiles($"{directoryName}"))
 

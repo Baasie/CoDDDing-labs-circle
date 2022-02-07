@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Value;
 
 namespace SeatsSuggestions
 {
-    public class Row
+    public class Row : ValueType<Row>
     {
-        public string Name { get; }
-        public List<Seat> Seats { get; }
+        public string Name { get; init; }
+        public List<Seat> Seats { get; init; }
 
         public Row(string name, List<Seat> seats)
         {
@@ -13,9 +15,9 @@ namespace SeatsSuggestions
             Seats = seats;
         }
 
-        public void AddSeat(Seat seat)
+        public Row AddSeat(Seat seat)
         {
-            Seats.Add(seat);
+            return new Row(Name, new List<Seat>(Seats) { seat }); ;
         }
 
         public SeatingOptionSuggested SuggestSeatingOption(int partyRequested, PricingCategory pricingCategory)
@@ -24,18 +26,43 @@ namespace SeatsSuggestions
             {
                 if (seat.IsAvailable() && seat.MatchCategory(pricingCategory))
                 {
-                    var seatAllocation = new SeatingOptionSuggested(partyRequested, pricingCategory);
+                    var seatingOptionSuggested = new SeatingOptionSuggested(partyRequested, pricingCategory);
 
-                    seatAllocation.AddSeat(seat);
+                    seatingOptionSuggested.AddSeat(seat);
 
-                    if (seatAllocation.MatchExpectation())
+                    if (seatingOptionSuggested.MatchExpectation())
                     {
-                        return seatAllocation;
+                        return seatingOptionSuggested;
                     }
                 }
             }
 
             return new SeatingOptionNotAvailable(partyRequested, pricingCategory);
+        }
+
+        public Row Allocate(Seat seat)
+        {
+            var newVersionOfSeats = new List<Seat>();
+
+            foreach (var currentSeat in Seats)
+            {
+                if (currentSeat.SameSeatLocation(seat))
+                {
+                    newVersionOfSeats.Add(new Seat(seat.RowName, seat.Number, seat.PricingCategory,
+                        SeatAvailability.Allocated));
+                }
+                else
+                {
+                    newVersionOfSeats.Add(currentSeat);
+                }
+            }
+
+            return new Row(seat.RowName, newVersionOfSeats);
+        }
+
+        protected override IEnumerable<object> GetAllAttributesToBeUsedForEquality()
+        {
+            return new object[] {Name, new ListByValue<Seat>(Seats)};
         }
     }
 }
