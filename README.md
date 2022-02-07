@@ -19,6 +19,7 @@ Deze nieuwe manier van code-opzet en het gebruik van DDD-patronen in de domein l
 - Meer handvaten om een plan te maken om de Zaaksysteem-solution op te splitsen in Domein-solution en hoe dit te bewerkstelligen.
 
 ## Agenda (maar deze kan natuurlijk iets veranderen terwijl wij bezig zijn) zal het volgende zijn:
+
 ### Dag 1: 
 - Recap DDD, Eventstorming, example mapping en bounded context canvas
 - object design met responsibility mapping
