@@ -21,6 +21,7 @@ namespace ExternalDependencies.ReservationsProvider
 
             foreach (var fileFullName in Directory.EnumerateFiles($"{directoryName}"))
 
+            {
                 if (fileFullName.Contains("_booked_seats.json"))
                 {
                     var fileName = Path.GetFileName(fileFullName);
@@ -29,11 +30,15 @@ namespace ExternalDependencies.ReservationsProvider
 
                     _repository[eventId] = JsonFile.ReadFromJsonFile<ReservedSeatsDto>(fileFullName);
                 }
+            }
         }
 
         public ReservedSeatsDto GetReservedSeats(string showId)
         {
-            if (_repository.ContainsKey(showId)) return _repository[showId];
+            if (_repository.ContainsKey(showId))
+            {
+                return _repository[showId];
+            }
 
             return new ReservedSeatsDto();
         }
@@ -47,7 +52,7 @@ namespace ExternalDependencies.ReservationsProvider
                 directoryName = directoryName.Substring(6);
             }
 
-            if (directoryName.StartsWith(@"file:/"))
+            if (directoryName != null && directoryName.StartsWith(@"file:/"))
             {
                 directoryName = directoryName.Substring(5);
             }

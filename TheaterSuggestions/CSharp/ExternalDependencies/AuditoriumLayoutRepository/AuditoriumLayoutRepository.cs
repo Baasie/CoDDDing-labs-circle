@@ -22,6 +22,7 @@ namespace ExternalDependencies.AuditoriumLayoutRepository
             Console.WriteLine(directoryName);
             
             foreach (var fileFullName in Directory.EnumerateFiles($"{directoryName}"))
+            {
                 if (fileFullName.Contains("_theater.json"))
                 {
                     var fileName = Path.GetFileName(fileFullName);
@@ -29,11 +30,15 @@ namespace ExternalDependencies.AuditoriumLayoutRepository
                     var eventId = Path.GetFileName(fileName.Split("-")[0]);
                     _repository[eventId] = JsonFile.ReadFromJsonFile<AuditoriumDto>(fileFullName);
                 }
+            }
         }
 
-        public AuditoriumDto GetAuditoriumLayoutFor(string showId)
+        public AuditoriumDto GetAuditoriumSeatingFor(string showId)
         {
-            if (_repository.ContainsKey(showId)) return _repository[showId];
+            if (_repository.ContainsKey(showId))
+            {
+                return _repository[showId];
+            }
 
             return new AuditoriumDto();
         }
