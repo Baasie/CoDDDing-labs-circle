@@ -12,7 +12,6 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
         public void Return_SeatsNotAvailable_when_Auditorium_has_all_its_seats_already_reserved()
         {
             // Madison Auditorium-5
-            //
             //      1   2   3   4   5   6   7   8   9  10
             // A : (2) (2) (1) (1) (1) (1) (1) (1) (2) (2)
             // B : (2) (2) (1) (1) (1) (1) (1) (1) (2) (2)
@@ -75,7 +74,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
             var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
 
             Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A5", "A6", "A4");
-            Check.That(suggestionsMade.SeatNames(PricingCategory.Second)).ContainsExactly("A2", "A9", "A1");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Second)).ContainsExactly( "A2", "A9", "A1");
             Check.That(suggestionsMade.SeatNames(PricingCategory.Third)).ContainsExactly("E5", "E6", "E4");
 
             Check.That(suggestionsMade.SeatNames(PricingCategory.Mixed)).ContainsExactly("A5", "A6", "A4");
@@ -100,6 +99,70 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
             var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
 
             Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A4", "A3", "B5");
+        }
+
+        [Test]
+        public void Offer_4_adjacent_seats_nearer_the_middle_of_a_row_when_it_is_possible()
+        {
+            // FIX ME
+
+            // Dock Street Auditorium-3
+            //
+            //      1   2   3   4   5   6   7   8   9  10
+            // A:  (2) (2) (1) (1) (1)  1   1   1   2   2
+            // B:   2   2   1   1  (1) (1) (1) (1)  2   2
+            // C:   2   2   2   2   2   2   2   2   2   2
+            // D:   2   2   2   2   2   2   2   2   2   2
+            // E:   3   3   3   3   3   3   3   3   3   3
+            // F:   3   3   3   3   3   3   3   3   3   3
+            var showId = "3";
+            var partyRequested = 4;
+
+            var auditoriumLayoutAdapter =
+                new AuditoriumSeatingAdapter(new AuditoriumLayoutRepository(), new ReservationsProvider());
+
+            var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
+
+            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+
+            Check.That(suggestionsMade.SeatNames(PricingCategory.First)).IsEmpty();
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Second)).ContainsExactly("C4-C5-C6-C7", "D4-D5-D6-D7");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Third)).ContainsExactly("E4-E5-E6-E7", "F4-F5-F6-F7");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Mixed))
+                .ContainsExactly("A6-A7-A8-A9", "B1-B2-B3-B4", "C4-C5-C6-C7");
+        }
+
+        [Test]
+        public void Offer_3_adjacent_seats_nearer_the_middle_of_a_row_when_it_is_possible()
+        {
+            // FIX ME
+
+            // Dock Street Auditorium-3
+            //
+            //      1   2   3   4   5   6   7   8   9  10
+            // A:  (2) (2) (1) (1) (1)  1   1   1   2   2
+            // B:   2   2   1   1  (1) (1) (1) (1)  2   2
+            // C:   2   2   2   2   2   2   2   2   2   2
+            // D:   2   2   2   2   2   2   2   2   2   2
+            // E:   3   3   3   3   3   3   3   3   3   3
+            // F:   3   3   3   3   3   3   3   3   3   3
+            var showId = "3";
+            var partyRequested = 3;
+
+            var auditoriumLayoutAdapter =
+                new AuditoriumSeatingAdapter(new AuditoriumLayoutRepository(), new ReservationsProvider());
+
+            var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
+
+            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+
+            Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A6-A7-A8");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Second))
+                .ContainsExactly("C4-C5-C6", "C1-C2-C3", "C7-C8-C9");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Third))
+                .ContainsExactly("E4-E5-E6", "E1-E2-E3", "E7-E8-E9");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Mixed))
+                .ContainsExactly("A6-A7-A8", "B2-B3-B4", "C4-C5-C6");
         }
     }
 }

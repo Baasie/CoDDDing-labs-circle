@@ -16,3 +16,7 @@ We extracted our domain model to the 'SeatsSuggestions' project, and refactored 
 Now that we used the tactical patterns to make our design more supple to changes of our business, we can start implementing more complex domain logic.
 In lab 3, part 1 we added a new failing Acceptance Test that we modeled together in Example Mapping about offering seats nearer to the middle of a row.
 We also added two new unit test to the 'RowShould' that fails that will help you implement the test. You can first have a discussion how you would design this more complex domain logic.
+
+# Lab 3 Part 2 - Offer seats nearer to the middle of the row when possible
+
+In part 1 we started to implement the first part of the deep model. In this second part you will continue designing the deeper model with offering seats nearer to the middle of the row when possible as modeled in our example mapping.

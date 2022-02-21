@@ -18,7 +18,7 @@ namespace SeatsSuggestions
         {
             PartyRequested = partyRequested;
             PricingCategory = pricingCategory;
-            _suggestedSeats = seats;
+            _suggestedSeats = seats.OrderBy(s => s.Number).ToList();
         }
 
         public IEnumerable<string> SeatNames()

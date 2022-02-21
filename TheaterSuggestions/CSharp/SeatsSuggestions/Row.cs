@@ -45,6 +45,10 @@ namespace SeatsSuggestions
             return seatsWithDistanceFromMiddleOfTheRow.Select(seatWithTheDistanceFromTheMiddleOfTheRow => seatWithTheDistanceFromTheMiddleOfTheRow.Seat);
         }
 
+        private bool DoNotLookForAdjacentSeatsWhenThePartyContainsOnlyOnePerson(SuggestionRequest suggestionRequest)
+        {
+            return suggestionRequest.PartyRequested == 1;
+        }
         public Row Allocate(Seat seat)
         {
             var newVersionOfSeats = new List<Seat>();
