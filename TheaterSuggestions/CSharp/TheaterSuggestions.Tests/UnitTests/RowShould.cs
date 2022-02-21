@@ -2,6 +2,7 @@
 using System.Linq;
 using NFluent;
 using NUnit.Framework;
+using SeatsSuggestions.DeepModel;
 
 namespace SeatsSuggestions.Tests.UnitTests
 {
@@ -20,11 +21,9 @@ namespace SeatsSuggestions.Tests.UnitTests
             Check.That(rowSecondInstance).IsEqualTo(rowFirstInstance);
 
             // Should not mutate existing instance 
-            var a3 = new Seat("A", 3, PricingCategory.Second, SeatAvailability.Available);
-            var newRowWithNewSeatAdded = rowSecondInstance.AddSeat(a3);
-
+            var a3 = new Seat("A", 2, PricingCategory.Second, SeatAvailability.Available);
+            rowSecondInstance.AddSeat(a3);
             Check.That(rowSecondInstance).IsEqualTo(rowFirstInstance);
-            Check.That(newRowWithNewSeatAdded).IsNotEqualTo(rowFirstInstance);
         }
 
         [Test]
@@ -45,15 +44,15 @@ namespace SeatsSuggestions.Tests.UnitTests
 
             var row = new Row("A", new List<Seat> { a1, a2, a3, a4, a5, a6, a7, a8, a9, a10 });
 
-            var seatsWithDistance = OfferSeatsNearerTheMiddleOfTheRow(row, PricingCategory.Mixed).Take(partySize);
+            var seatsWithDistance = new OfferingSeatsNearerMiddleOfTheRow(row).OfferSeatsNearerTheMiddleOfTheRow(new SuggestionRequest(5, PricingCategory.Mixed)).Take(partySize);
 
             Check.That(seatsWithDistance.Select(s => s.Seat).ToList())
-                .ContainsExactly(a5, a6);
+               .ContainsExactly(a5, a6);
         }
 
 
         [Test]
-        public void Offer_seats_from_the_middle_of_the_row_when_with_the_row_size_is_odd_and_party_size_is_greater_than_one()
+        public void Offer_seats_from_the_middle_of_the_row_when_the_row_size_is_odd_party_size_is_greater_than_one()
         {
             var partySize = 5;
 
@@ -68,41 +67,11 @@ namespace SeatsSuggestions.Tests.UnitTests
             var a9 = new Seat("A", 9, PricingCategory.Second, SeatAvailability.Available);
 
             var row = new Row("A", new List<Seat> { a1, a2, a3, a4, a5, a6, a7, a8, a9 });
-            var seatsWithDistance = OfferSeatsNearerTheMiddleOfTheRow(row, PricingCategory.Mixed).Take(partySize);
+
+            var seatsWithDistance = new OfferingSeatsNearerMiddleOfTheRow(row).OfferSeatsNearerTheMiddleOfTheRow(new SuggestionRequest(5, PricingCategory.Mixed)).Take(partySize);
 
             Check.That(seatsWithDistance.Select(s => s.Seat).OrderBy(s => s.Number).ToList())
                 .ContainsExactly(a2, a3, a5, a6, a7);
         }
-
-        public IEnumerable<SeatWithDistance> OfferSeatsNearerTheMiddleOfTheRow(Row row, PricingCategory pricingCategory)
-        {
-            // TODO: Implement your logic here
-
-            return new List<SeatWithDistance>();
-        }
-    }
-
-    /// <summary>
-    ///     Our model uses a seat with a property DistanceFromTheMiddle
-    ///     to manage these business rules:
-    ///     * Offer seats nearer middle of the row.
-    ///     * Offer adjacent seats to member of the same party.
-    /// </summary>
-    public class SeatWithDistance
-    {
-        public SeatWithDistance(Seat seat, int distanceFromTheMiddleOfTheRow)
-        {
-            Seat = seat;
-            DistanceFromTheMiddleOfTheRow = distanceFromTheMiddleOfTheRow;
-        }
-
-        public Seat Seat { get; }
-        public int DistanceFromTheMiddleOfTheRow { get; }
-
-        public override string ToString()
-        {
-            return $"{Seat.RowName}{Seat.Number} {DistanceFromTheMiddleOfTheRow}";
-        }
-
     }
 }
