@@ -15,11 +15,11 @@ namespace SeatsSuggestions
             _rows = rows;
         }
 
-        public SeatingOptionSuggested SuggestSeatingOptionFor(int partyRequested, PricingCategory pricingCategory)
+        public SeatingOptionSuggested SuggestSeatingOptionFor(SuggestionRequest suggestionRequest)
         {
             foreach (var row in _rows.Values)
             {
-                var seatingOption = row.SuggestSeatingOption(partyRequested, pricingCategory);
+                var seatingOption = row.SuggestSeatingOption(suggestionRequest);
 
                 if (seatingOption.MatchExpectation())
                 {
@@ -27,7 +27,7 @@ namespace SeatsSuggestions
                 }
             }
 
-            return new SeatingOptionNotAvailable(partyRequested, pricingCategory);
+            return new SeatingOptionNotAvailable(suggestionRequest);
         }
 
         public AuditoriumSeating Allocate(SeatingOptionSuggested seatingOptionSuggested)

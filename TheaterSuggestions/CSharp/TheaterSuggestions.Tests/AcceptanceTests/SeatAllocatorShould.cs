@@ -12,6 +12,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
         public void Return_SeatsNotAvailable_when_Auditorium_has_all_its_seats_already_reserved()
         {
             // Madison Auditorium-5
+            //
             //      1   2   3   4   5   6   7   8   9  10
             // A : (2) (2) (1) (1) (1) (1) (1) (1) (2) (2)
             // B : (2) (2) (1) (1) (1) (1) (1) (1) (2) (2)
@@ -63,7 +64,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
             //  D: 2   2   2   2   2   2   2   2   2   2
             //  E: 3   3   3   3   3   3   3   3   3   3
             //  F: 3   3   3   3   3   3   3   3   3   3
-            const string eventId = "18";
+            const string showId = "18";
             const int partyRequested = 1;
 
             var auditoriumLayoutAdapter =
@@ -71,12 +72,36 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
 
             var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
 
-            var suggestionsMade = seatAllocator.MakeSuggestions(eventId, partyRequested);
+            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
 
             Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A3", "A4", "A5");
             Check.That(suggestionsMade.SeatNames(PricingCategory.Second)).ContainsExactly("A1", "A2", "A9");
             Check.That(suggestionsMade.SeatNames(PricingCategory.Third)).ContainsExactly("E1", "E2", "E3");
+
             Check.That(suggestionsMade.SeatNames(PricingCategory.Mixed)).ContainsExactly("A1", "A2", "A3");
+        }
+
+        [Test]
+        public void Offer_seats_nearer_the_middle_of_a_row()
+        {
+            // FIX ME
+
+            // Mogador Auditorium-9
+            //
+            //    1   2   3   4   5   6   7   8   9  10
+            // A: 2   2   1   1  (1) (1) (1) (1)  2   2
+            // B: 2   2   1   1   1   1   1   1   2   2
+            const string showId = "9";
+            const int partyRequested = 1;
+
+            var auditoriumLayoutAdapter =
+                new AuditoriumSeatingAdapter(new AuditoriumLayoutRepository(), new ReservationsProvider());
+
+            var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
+
+            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+
+            Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A4", "A3", "B5");
         }
     }
 }

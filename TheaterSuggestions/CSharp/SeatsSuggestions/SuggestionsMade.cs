@@ -25,7 +25,8 @@ namespace SeatsSuggestions
 
         public IEnumerable<string> SeatNames(PricingCategory pricingCategory)
         {
-            return ForCategory[pricingCategory].SelectMany(s => s.SeatNames());
+            var suggestionsMade = ForCategory[pricingCategory];
+            return suggestionsMade.Select(s => string.Join("-", s.SeatNames()));
         }
 
         private void InstantiateAnEmptyListForEveryPricingCategory()

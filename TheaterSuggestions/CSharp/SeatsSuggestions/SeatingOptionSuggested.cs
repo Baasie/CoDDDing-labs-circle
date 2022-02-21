@@ -8,10 +8,10 @@ namespace SeatsSuggestions
         public List<Seat> Seats { get; } = new List<Seat>();
         public int PartyRequested { get; }
 
-        public SeatingOptionSuggested(int partyRequested, PricingCategory priceCategory)
+        public SeatingOptionSuggested(SuggestionRequest suggestionRequest)
         {
-            PartyRequested = partyRequested;
-            PricingCategory = priceCategory;
+            PartyRequested = suggestionRequest.PartyRequested;
+            PricingCategory = suggestionRequest.PricingCategory;
         }
 
         public void AddSeat(Seat seat)

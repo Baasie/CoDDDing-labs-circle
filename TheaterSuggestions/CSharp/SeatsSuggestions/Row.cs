@@ -17,27 +17,29 @@ namespace SeatsSuggestions
 
         public Row AddSeat(Seat seat)
         {
-            return new Row(Name, new List<Seat>(Seats) { seat }); ;
+            return new Row(Name, new List<Seat>(Seats) { seat });
         }
 
-        public SeatingOptionSuggested SuggestSeatingOption(int partyRequested, PricingCategory pricingCategory)
+        public SeatingOptionSuggested SuggestSeatingOption(SuggestionRequest suggestionRequest)
         {
-            foreach (var seat in Seats)
+            var seatingOptionSuggested = new SeatingOptionSuggested(suggestionRequest);
+
+            foreach (var seat in SelectAvailableSeatsCompliantWith(suggestionRequest.PricingCategory))
             {
-                if (seat.IsAvailable() && seat.MatchCategory(pricingCategory))
+                seatingOptionSuggested.AddSeat(seat);
+
+                if (seatingOptionSuggested.MatchExpectation())
                 {
-                    var seatingOptionSuggested = new SeatingOptionSuggested(partyRequested, pricingCategory);
-
-                    seatingOptionSuggested.AddSeat(seat);
-
-                    if (seatingOptionSuggested.MatchExpectation())
-                    {
-                        return seatingOptionSuggested;
-                    }
+                    return seatingOptionSuggested;
                 }
             }
 
-            return new SeatingOptionNotAvailable(partyRequested, pricingCategory);
+            return new SeatingOptionNotAvailable(suggestionRequest);
+        }
+
+        private IEnumerable<Seat> SelectAvailableSeatsCompliantWith(PricingCategory pricingCategory)
+        {
+            return Seats.Where(s => s.IsAvailable() && s.MatchCategory(pricingCategory));
         }
 
         public Row Allocate(Seat seat)

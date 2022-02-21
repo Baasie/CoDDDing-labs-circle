@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace SeatsSuggestions
 {
@@ -36,11 +37,12 @@ namespace SeatsSuggestions
             int partyRequested,
             PricingCategory pricingCategory)
         {
+            var suggestionRequest = new SuggestionRequest(partyRequested, pricingCategory);
             var foundedSuggestions = new List<SuggestionMade>();
 
             for (var i = 0; i < NumberOfSuggestionsPerPricingCategory; i++)
             {
-                var seatOptionsSuggested = auditoriumSeating.SuggestSeatingOptionFor(partyRequested, pricingCategory);
+                var seatOptionsSuggested = auditoriumSeating.SuggestSeatingOptionFor(suggestionRequest);
 
                 if (seatOptionsSuggested.MatchExpectation())
                 {

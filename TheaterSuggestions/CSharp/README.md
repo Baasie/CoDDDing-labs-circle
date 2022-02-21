@@ -10,3 +10,9 @@ We won't be doing puristic TDD, as in we will use the domain model designed from
 # Lab 2
 
 We extracted our domain model to the 'SeatsSuggestions' project, and refactored our stub/fake mechanism int he Tests. Now it is time to implement the next test in 'SeatAllocatorShould' called 'Offer_several_suggestions_ie_1_per_PricingCategory_and_other_one_without_category_affinity' which fails. You need to find out why it failed, that is why we gave you a couple of unit tests to work with and find the bug!
+
+# Lab 3 Part 1 - Offer seats nearer to the middle of a row
+
+Now that we used the tactical patterns to make our design more supple to changes of our business, we can start implementing more complex domain logic.
+In lab 3, part 1 we added a new failing Acceptance Test that we modeled together in Example Mapping about offering seats nearer to the middle of a row.
+We also added two new unit test to the 'RowShould' that fails that will help you implement the test. You can first have a discussion how you would design this more complex domain logic.
