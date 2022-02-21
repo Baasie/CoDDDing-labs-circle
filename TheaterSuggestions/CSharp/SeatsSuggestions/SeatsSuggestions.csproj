@@ -12,8 +12,4 @@
     <ProjectReference Include="..\ExternalDependencies\ExternalDependencies.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DeepModel\" />
-  </ItemGroup>
-
 </Project>
