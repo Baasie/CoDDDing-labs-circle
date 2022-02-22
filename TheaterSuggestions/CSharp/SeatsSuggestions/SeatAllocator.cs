@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Threading.Tasks;
 
 namespace SeatsSuggestions
 {
     public class SeatAllocator
     {
         private const int NumberOfSuggestionsPerPricingCategory = 3;
-        private readonly AuditoriumSeatingAdapter _auditoriumSeatingAdapter;
+        private readonly IProvideAuditoriumSeating _auditoriumSeatingAdapter;
 
-        public SeatAllocator(AuditoriumSeatingAdapter auditoriumSeatingAdapter)
+        public SeatAllocator(IProvideAuditoriumSeating auditoriumSeatingAdapter)
         {
             _auditoriumSeatingAdapter = auditoriumSeatingAdapter;
         }
 
-        public SuggestionsMade MakeSuggestions(string showId, int partyRequested)
+        public async Task<SuggestionsMade> MakeSuggestions(string showId, int partyRequested)
         {
-            var auditoriumSeating = _auditoriumSeatingAdapter.GetAuditoriumSeating(showId);
+            var auditoriumSeating = await _auditoriumSeatingAdapter.GetAuditoriumSeating(showId);
 
             var suggestionsMade = new SuggestionsMade(showId, partyRequested);
 
@@ -37,12 +37,12 @@ namespace SeatsSuggestions
             int partyRequested,
             PricingCategory pricingCategory)
         {
-            var suggestionRequest = new SuggestionRequest(partyRequested, pricingCategory);
             var foundedSuggestions = new List<SuggestionMade>();
 
             for (var i = 0; i < NumberOfSuggestionsPerPricingCategory; i++)
             {
-                var seatOptionsSuggested = auditoriumSeating.SuggestSeatingOptionFor(suggestionRequest);
+                var seatOptionsSuggested = auditoriumSeating
+                    .SuggestSeatingOptionFor(new SuggestionRequest(partyRequested, pricingCategory));
 
                 if (seatOptionsSuggested.MatchExpectation())
                 {

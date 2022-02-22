@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace ExternalDependencies.ReservationsProvider
 {
@@ -33,26 +34,26 @@ namespace ExternalDependencies.ReservationsProvider
             }
         }
 
-        public ReservedSeatsDto GetReservedSeats(string showId)
+        public Task<ReservedSeatsDto> GetReservedSeats(string showId)
         {
             if (_repository.ContainsKey(showId))
             {
-                return _repository[showId];
+                return Task.FromResult(_repository[showId]);
             }
 
-            return new ReservedSeatsDto();
+            return Task.FromResult(new ReservedSeatsDto());
         }
 
         private static string GetExecutingAssemblyDirectoryFullPath()
         {
             var directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            if (directoryName != null && directoryName.StartsWith(@"file:\"))
+            if (directoryName.StartsWith(@"file:\"))
             {
                 directoryName = directoryName.Substring(6);
             }
 
-            if (directoryName != null && directoryName.StartsWith(@"file:/"))
+            if (directoryName.StartsWith(@"file:/"))
             {
                 directoryName = directoryName.Substring(5);
             }

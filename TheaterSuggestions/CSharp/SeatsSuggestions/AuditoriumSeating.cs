@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SeatsSuggestions;
+using System.Collections.Generic;
 using Value;
 using Value.Shared;
 

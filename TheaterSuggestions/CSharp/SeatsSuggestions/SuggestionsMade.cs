@@ -23,10 +23,15 @@ namespace SeatsSuggestions
             InstantiateAnEmptyListForEveryPricingCategory();
         }
 
+        public IEnumerable<string> SeatsInFirstPricingCategory => SeatNames(PricingCategory.First);
+        public IEnumerable<string> SeatsInSecondPricingCategory => SeatNames(PricingCategory.Second);
+        public IEnumerable<string> SeatsInThirdPricingCategory => SeatNames(PricingCategory.Third);
+        public IEnumerable<string> SeatsInMixedPricingCategory => SeatNames(PricingCategory.Mixed);
+
         public IEnumerable<string> SeatNames(PricingCategory pricingCategory)
         {
             var suggestionsMade = ForCategory[pricingCategory];
-            return suggestionsMade.Select(s => string.Join("-", s.SeatNames()));
+            return suggestionsMade.Select(s => string.Join((string) "-", (IEnumerable<string>) s.SeatNames()));
         }
 
         private void InstantiateAnEmptyListForEveryPricingCategory()

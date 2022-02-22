@@ -18,5 +18,10 @@ namespace SeatsSuggestions
         {
             return new object[] {PartyRequested, PricingCategory};
         }
+
+        public override string ToString()
+        {
+            return $"{PartyRequested}-{PricingCategory.ToString()}";
+        }
     }
 }

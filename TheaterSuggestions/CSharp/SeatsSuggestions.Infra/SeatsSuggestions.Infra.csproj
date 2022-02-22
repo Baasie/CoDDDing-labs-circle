@@ -5,15 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Value" Version="1.1.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ExternalDependencies\ExternalDependencies.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DeepModel\" />
+    <ProjectReference Include="..\SeatsSuggestions.Domain\SeatsSuggestions.Domain.csproj" />
   </ItemGroup>
 
 </Project>

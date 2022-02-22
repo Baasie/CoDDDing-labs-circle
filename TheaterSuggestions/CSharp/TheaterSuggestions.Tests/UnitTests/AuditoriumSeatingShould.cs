@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using ExternalDependencies.AuditoriumLayoutRepository;
 using ExternalDependencies.ReservationsProvider;
 using NFluent;
@@ -10,15 +11,15 @@ namespace SeatsSuggestions.Tests.UnitTests
     public class AuditoriumSeatingShould
     {
         [Test]
-        public void Be_a_Value_Type()
+        public async Task Be_a_Value_Type()
         {
             var auditoriumLayoutAdapter =
                 new AuditoriumSeatingAdapter(new AuditoriumLayoutRepository(), new ReservationsProvider());
             var showIdWithoutReservationYet = "18";
             var auditoriumSeatingFirstInstance =
-                auditoriumLayoutAdapter.GetAuditoriumSeating(showIdWithoutReservationYet);
+                await auditoriumLayoutAdapter.GetAuditoriumSeating(showIdWithoutReservationYet);
             var auditoriumSeatingSecondInstance =
-                auditoriumLayoutAdapter.GetAuditoriumSeating(showIdWithoutReservationYet);
+                await auditoriumLayoutAdapter.GetAuditoriumSeating(showIdWithoutReservationYet);
 
             // Two different instances with same values should be equals
             Check.That(auditoriumSeatingSecondInstance).IsEqualTo(auditoriumSeatingFirstInstance);

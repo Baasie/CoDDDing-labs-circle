@@ -1,4 +1,5 @@
-﻿using ExternalDependencies.AuditoriumLayoutRepository;
+﻿using System.Threading.Tasks;
+using ExternalDependencies.AuditoriumLayoutRepository;
 using ExternalDependencies.ReservationsProvider;
 using NFluent;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
     public class SeatAllocatorShould
     {
         [Test]
-        public void Return_SeatsNotAvailable_when_Auditorium_has_all_its_seats_already_reserved()
+        public async Task Return_SeatsNotAvailable_when_Auditorium_has_all_its_seats_already_reserved()
         {
             // Madison Auditorium-5
             //      1   2   3   4   5   6   7   8   9  10
@@ -23,7 +24,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
 
             var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
 
-            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+            var suggestionsMade = await seatAllocator.MakeSuggestions(showId, partyRequested);
             Check.That(suggestionsMade.PartyRequested).IsEqualTo(partyRequested);
             Check.That(suggestionsMade.ShowId).IsEqualTo(showId);
 
@@ -31,7 +32,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
         }
 
         [Test]
-        public void Suggest_one_seat_when_Auditorium_contains_one_available_seat_only()
+        public async Task Suggest_one_seat_when_Auditorium_contains_one_available_seat_only()
         {
             // Ford Auditorium-1
             //
@@ -46,13 +47,13 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
 
             var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
 
-            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+            var suggestionsMade = await seatAllocator.MakeSuggestions(showId, partyRequested);
 
             Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A3");
         }
 
         [Test]
-        public void Offer_several_suggestions_ie_1_per_PricingCategory_and_other_one_without_category_affinity()
+        public async Task Offer_several_suggestions_ie_1_per_PricingCategory_and_other_one_without_category_affinity()
         {
             // New Amsterdam-18
             //
@@ -71,19 +72,18 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
 
             var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
 
-            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+            var suggestionsMade = await seatAllocator.MakeSuggestions(showId, partyRequested);
 
             Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A5", "A6", "A4");
-            Check
-                .That(suggestionsMade.SeatNames(PricingCategory.Second)).ContainsExactly("A2", "A9", "A1");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Second)).ContainsExactly("A2", "A9", "A1");
+
             Check.That(suggestionsMade.SeatNames(PricingCategory.Third)).ContainsExactly("E5", "E6", "E4");
 
-            Check
-                .That(suggestionsMade.SeatNames(PricingCategory.Mixed)).ContainsExactly("A5", "A6", "A4");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.Mixed)).ContainsExactly("A5", "A6", "A4");
         }
 
         [Test]
-        public void Offer_seats_nearer_the_middle_of_a_row()
+        public async Task Offer_adjacent_seats_nearer_the_middle_of_a_row()
         {
             // Mogador Auditorium-9
             //
@@ -98,14 +98,13 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
 
             var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
 
-            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+            var suggestionsMade = await seatAllocator.MakeSuggestions(showId, partyRequested);
 
-            Check.That(suggestionsMade.SeatNames(PricingCategory.First))
-                .ContainsExactly("A4", "A3", "B5");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A4", "A3", "B5");
         }
 
         [Test]
-        public void Offer_4_adjacent_seats_nearer_the_middle_of_a_row_when_it_is_possible()
+        public async Task Offer_4_adjacent_seats_nearer_the_middle_of_a_row_when_it_is_possible()
         {
             // Dock Street Auditorium-3
             //
@@ -124,7 +123,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
 
             var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
 
-            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+            var suggestionsMade = await seatAllocator.MakeSuggestions(showId, partyRequested);
 
             Check.That(suggestionsMade.SeatNames(PricingCategory.First)).IsEmpty();
             Check.That(suggestionsMade.SeatNames(PricingCategory.Second)).ContainsExactly("C4-C5-C6-C7", "D4-D5-D6-D7");
@@ -134,7 +133,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
         }
 
         [Test]
-        public void Offer_3_adjacent_seats_nearer_the_middle_of_a_row_when_it_is_possible()
+        public async Task Offer_3_adjacent_seats_nearer_the_middle_of_a_row_when_it_is_possible()
         {
             // Dock Street Auditorium-3
             //
@@ -153,9 +152,10 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
 
             var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
 
-            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+            var suggestionsMade = await seatAllocator.MakeSuggestions(showId, partyRequested);
 
-            Check.That(suggestionsMade.SeatNames(PricingCategory.First)).ContainsExactly("A6-A7-A8");
+            Check.That(suggestionsMade.SeatNames(PricingCategory.First))
+                .ContainsExactly("A6-A7-A8");
             Check.That(suggestionsMade.SeatNames(PricingCategory.Second))
                 .ContainsExactly("C4-C5-C6", "C7-C8-C9", "C1-C2-C3");
             Check.That(suggestionsMade.SeatNames(PricingCategory.Third))
@@ -165,7 +165,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
         }
 
         [Test]
-        public void Offer_2_adjacent_seats_nearer_the_middle_of_a_row_when_it_is_possible()
+        public async Task Offer_2_adjacent_seats_nearer_the_middle_of_a_row_when_it_is_possible()
         {
             // Dock Street Auditorium-3
             //
@@ -184,7 +184,7 @@ namespace SeatsSuggestions.Tests.AcceptanceTests
 
             var seatAllocator = new SeatAllocator(auditoriumLayoutAdapter);
 
-            var suggestionsMade = seatAllocator.MakeSuggestions(showId, partyRequested);
+            var suggestionsMade = await seatAllocator.MakeSuggestions(showId, partyRequested);
 
             Check.That(suggestionsMade.SeatNames(PricingCategory.First))
                 .ContainsExactly("A6-A7", "B3-B4");

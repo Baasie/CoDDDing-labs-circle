@@ -20,3 +20,21 @@ We also added two new unit test to the 'RowShould' that fails that will help you
 # Lab 3 Part 2 - Offer seats nearer to the middle of the row when possible
 
 In part 1 we started to implement the first part of the deep model. In this second part you will continue designing the deeper model with offering seats nearer to the middle of the row when possible as modeled in our example mapping.
+
+# Lab 4 - Ports and Adapters aka Hexagonal
+
+Now that we have a deeper understanding and probed our model in code, it is time to make it production ready! For that we use the Ports and Adapters architecture.
+The current state the code is in, works. You can run the two External API in that project, and then start the SeatsSuggestions.Api and call ` http://localhost:4000/api/SeatsSuggestions?showId=5&party=3` and you should get the following output   
+```
+{
+  "ShowId": "5",
+  "PartyRequested": 3,
+  "SeatsInFirstPricingCategory": [],
+  "SeatsInSecondPricingCategory": [],
+  "SeatsInThirdPricingCategory": [],
+  "SeatsInMixedPricingCategory": []
+}
+```
+
+Now we want to split up our code to the Domain and Infra projects we created, so as to split Domain logic from Infra logic. If you want you can extend towards Clean Architecture and create a usecase in the domain project.
+You want to keep the code and tests working along the way, perhaps even in the end create your own system test :).

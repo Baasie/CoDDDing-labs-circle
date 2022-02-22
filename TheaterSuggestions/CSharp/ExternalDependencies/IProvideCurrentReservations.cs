@@ -1,7 +1,9 @@
-﻿namespace ExternalDependencies
+﻿using System.Threading.Tasks;
+
+namespace ExternalDependencies
 {
     public interface IProvideCurrentReservations
     {
-        ReservedSeatsDto GetReservedSeats(string showId);
+        Task<ReservedSeatsDto> GetReservedSeats(string showId);
     }
 }

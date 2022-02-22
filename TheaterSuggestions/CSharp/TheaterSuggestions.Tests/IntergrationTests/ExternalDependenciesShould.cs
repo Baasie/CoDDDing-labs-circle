@@ -1,4 +1,5 @@
-﻿using ExternalDependencies.AuditoriumLayoutRepository;
+﻿using System.Threading.Tasks;
+using ExternalDependencies.AuditoriumLayoutRepository;
 using ExternalDependencies.ReservationsProvider;
 using NFluent;
 using NUnit.Framework;
@@ -12,10 +13,10 @@ namespace SeatsSuggestions.Tests.IntergrationTests
     public class ExternalDependenciesShould
     {
         [Test]
-        public void Allow_us_to_retrieve_AuditoriumLayout_for_a_given_ShowId()
+        public async Task Allow_us_to_retrieve_AuditoriumLayout_for_a_given_ShowId()
         {
             var auditoriumLayoutRepository = new AuditoriumLayoutRepository();
-            var auditoriumDto = auditoriumLayoutRepository.GetAuditoriumSeatingFor("2");
+            var auditoriumDto = await auditoriumLayoutRepository.GetAuditoriumSeatingFor("2");
 
             Check.That(auditoriumDto.Rows).HasSize(6);
             Check.That(auditoriumDto.Corridors).HasSize(2);
@@ -24,10 +25,10 @@ namespace SeatsSuggestions.Tests.IntergrationTests
         }
 
         [Test]
-        public void Allow_us_to_retrieve_reserved_seats_for_a_given_ShowId()
+        public async Task Allow_us_to_retrieve_reserved_seats_for_a_given_ShowId()
         {
             var seatsRepository = new ReservationsProvider();
-            var reservedSeatsDto = seatsRepository.GetReservedSeats("1");
+            var reservedSeatsDto = await seatsRepository.GetReservedSeats("1");
 
             Check.That(reservedSeatsDto.ReservedSeats).HasSize(19);
         }
