@@ -1,43 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ExternalDependencies;
-using ExternalDependencies.AuditoriumLayoutRepository;
-using ExternalDependencies.ReservationsProvider;
+﻿using ExternalDependencies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using SeatsSuggestions.Domain;
+using SeatsSuggestions.Domain.Port;
+using SeatsSuggestions.Infra.Adapter;
 
 namespace SeatsSuggestions.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
-            IProvideAuditoriumLayouts auditoriumSeatingRepository = new AuditoriumWebRepository("http://localhost:6000/");
             // api/data_for_auditoriumSeating/
+            IProvideAuditoriumLayouts auditoriumSeatingRepository =
+                new AuditoriumWebRepository("http://localhost:6000/");
 
-            IProvideCurrentReservations seatReservationsProvider = new SeatReservationsWebAdapter("http://localhost:5000/"); 
             // data_for_reservation_seats/
+            IProvideCurrentReservations seatReservationsProvider =
+                new SeatReservationsWebRepository("http://localhost:5000/");
+            var seatAllocator =
+                new SeatAllocator(new AuditoriumSeatingAdapter(auditoriumSeatingRepository, seatReservationsProvider));
+            services.AddSingleton<IProvideSeatSuggestionsForShows>(seatAllocator);
 
-            services.AddSingleton<IProvideAuditoriumLayouts>(auditoriumSeatingRepository);
-            services.AddSingleton<IProvideCurrentReservations>(seatReservationsProvider);
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SeatsSuggestions API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,16 +40,15 @@ namespace SeatsSuggestions.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SeatsSuggestions API v1"));
             }
 
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

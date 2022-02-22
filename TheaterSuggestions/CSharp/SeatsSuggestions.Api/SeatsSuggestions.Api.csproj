@@ -9,7 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SeatsSuggestions\SeatsSuggestions.csproj" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SeatsSuggestions.Domain\SeatsSuggestions.Domain.csproj" />
     <ProjectReference Include="..\SeatsSuggestions.Infra\SeatsSuggestions.Infra.csproj" />
   </ItemGroup>

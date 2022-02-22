@@ -1,30 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ExternalDependencies;
+using SeatsSuggestions.Domain;
+using SeatsSuggestions.Domain.Port;
 
-namespace SeatsSuggestions
+namespace SeatsSuggestions.Infra.Adapter
 {
     /// <summary>
     ///     Adapt Dtos coming from the external dependencies (ReservationsProvider, AuditoriumLayoutRepository) to
     ///     AuditoriumSeating instances.
     /// </summary>
-    public class AuditoriumSeatingAdapter : IProvideAuditoriumSeating
+    public class AuditoriumSeatingAdapter : IAdaptAuditoriumSeating
     {
-        private readonly IProvideCurrentReservations _reservationsProvider;
         private readonly IProvideAuditoriumLayouts _auditoriumSeatingRepository;
-
-        public async Task<AuditoriumSeating> GetAuditoriumSeating(string showId)
-        {
-            var auditoriumDto = await _auditoriumSeatingRepository.GetAuditoriumSeatingFor(showId);
-            var reservedSeatsDto = await _reservationsProvider.GetReservedSeats(showId);
-            return AdaptAuditoriumSeatingDto(auditoriumDto, reservedSeatsDto);
-        }
+        private readonly IProvideCurrentReservations _reservationsProvider;
 
         public AuditoriumSeatingAdapter(IProvideAuditoriumLayouts auditoriumSeatingRepository,
             IProvideCurrentReservations reservationsProvider)
         {
             _auditoriumSeatingRepository = auditoriumSeatingRepository;
             _reservationsProvider = reservationsProvider;
+        }
+
+        public async Task<AuditoriumSeating> GetAuditoriumSeating(ShowId showId)
+        {
+            var auditoriumDto = await _auditoriumSeatingRepository.GetAuditoriumSeatingFor(showId.Id);
+            var reservedSeatsDto = await _reservationsProvider.GetReservedSeats(showId.Id);
+            return AdaptAuditoriumSeatingDto(auditoriumDto, reservedSeatsDto);
         }
 
 
@@ -55,7 +57,7 @@ namespace SeatsSuggestions
 
         private static PricingCategory ConvertCategory(int dtoPricingCategory)
         {
-            return (PricingCategory) dtoPricingCategory;
+            return (PricingCategory)dtoPricingCategory;
         }
 
         private static uint ExtractSeatNumber(string seatName)

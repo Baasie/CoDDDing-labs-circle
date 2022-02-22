@@ -1,14 +1,11 @@
-﻿using SeatsSuggestions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Value;
 using Value.Shared;
 
-namespace SeatsSuggestions
+namespace SeatsSuggestions.Domain
 {
     public class AuditoriumSeating : ValueType<AuditoriumSeating>
     {
-        public IReadOnlyDictionary<string, Row> Rows => _rows;
-
         private readonly Dictionary<string, Row> _rows;
 
         public AuditoriumSeating(Dictionary<string, Row> rows)
@@ -16,16 +13,15 @@ namespace SeatsSuggestions
             _rows = rows;
         }
 
+        public IReadOnlyDictionary<string, Row> Rows => _rows;
+
         public SeatingOptionSuggested SuggestSeatingOptionFor(SuggestionRequest suggestionRequest)
         {
             foreach (var row in _rows.Values)
             {
                 var seatingOption = row.SuggestSeatingOption(suggestionRequest);
 
-                if (seatingOption.MatchExpectation())
-                {
-                    return seatingOption;
-                }
+                if (seatingOption.MatchExpectation()) return seatingOption;
             }
 
             return new SeatingOptionNotAvailable(suggestionRequest);
@@ -41,7 +37,7 @@ namespace SeatsSuggestions
 
         protected override IEnumerable<object> GetAllAttributesToBeUsedForEquality()
         {
-            return new object[] {new DictionaryByValue<string, Row>(_rows)};
+            return new object[] { new DictionaryByValue<string, Row>(_rows) };
         }
 
         private AuditoriumSeating AllocateSeats(IEnumerable<Seat> updatedSeats)

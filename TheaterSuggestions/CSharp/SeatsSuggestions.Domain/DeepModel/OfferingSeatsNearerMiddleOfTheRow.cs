@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Value;
 
-namespace SeatsSuggestions.DeepModel
+namespace SeatsSuggestions.Domain.DeepModel
 {
     /// <summary>
     ///     Business Rule: offer seats nearer the middle of a row

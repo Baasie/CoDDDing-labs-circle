@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SeatsSuggestions.DeepModel;
+using SeatsSuggestions.Domain.DeepModel;
 using Value;
 
-namespace SeatsSuggestions
+namespace SeatsSuggestions.Domain
 {
     public class Row : ValueType<Row>
     {
@@ -59,7 +59,7 @@ namespace SeatsSuggestions
         private static bool DoNotLookForAdjacentSeatsWhenThePartyContainsOnlyOnePerson(
             SuggestionRequest suggestionRequest)
         {
-            return suggestionRequest.PartyRequested == 1;
+            return suggestionRequest.PartyRequested.PartySize == 1;
         }
 
         public Row Allocate(Seat seat)

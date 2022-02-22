@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
 using Value;
 
-namespace SeatsSuggestions
+namespace SeatsSuggestions.Domain
 {
     public class SuggestionRequest : ValueType<SuggestionRequest>
     {
-        public int PartyRequested { get; }
-        public PricingCategory PricingCategory { get; }
-
-        public SuggestionRequest(int partyRequested, PricingCategory pricingCategory)
+        public SuggestionRequest(PartyRequested partyRequested, PricingCategory pricingCategory)
         {
             PartyRequested = partyRequested;
             PricingCategory = pricingCategory;
         }
 
+        public PartyRequested PartyRequested { get; }
+        public PricingCategory PricingCategory { get; }
+
         protected override IEnumerable<object> GetAllAttributesToBeUsedForEquality()
         {
-            return new object[] {PartyRequested, PricingCategory};
+            return new object[] { PartyRequested, PricingCategory };
         }
 
         public override string ToString()

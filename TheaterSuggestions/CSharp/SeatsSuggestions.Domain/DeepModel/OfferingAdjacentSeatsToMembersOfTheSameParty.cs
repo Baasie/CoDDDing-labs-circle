@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SeatsSuggestions.DeepModel
+namespace SeatsSuggestions.Domain.DeepModel
 {
     /// <summary>
     ///     Business Rule: offer adjacent seats to members of the same party
@@ -68,7 +68,7 @@ namespace SeatsSuggestions.DeepModel
             foreach (var seats in groupOfAdjacentSeats.Groups.Select(adjacentSeats =>
                 adjacentSeats.SeatsWithDistance.OrderBy(s => s.DistanceFromTheMiddleOfTheRow)))
                 adjacentSeatsGroups.Groups.Add(
-                    new AdjacentSeats(seats.Take(suggestionRequest.PartyRequested)));
+                    new AdjacentSeats(seats.Take(suggestionRequest.PartyRequested.PartySize)));
 
             return adjacentSeatsGroups;
         }
@@ -124,7 +124,7 @@ namespace SeatsSuggestions.DeepModel
         private static bool
             IsMatchingPartyRequested(SuggestionRequest suggestionRequest, ICollection seatWithDistances)
         {
-            return seatWithDistances.Count >= suggestionRequest.PartyRequested;
+            return seatWithDistances.Count >= suggestionRequest.PartyRequested.PartySize;
         }
 
         private static AdjacentSeatsGroups

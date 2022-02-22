@@ -1,17 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Value;
 
-namespace SeatsSuggestions
+namespace SeatsSuggestions.Domain
 {
     public class Seat : ValueType<Seat>
     {
-        public string RowName { get; }
-        public uint Number { get; }
-        public PricingCategory PricingCategory { get; }
-        public SeatAvailability SeatAvailability { get; }
-
-
         public Seat(string rowName, uint number, PricingCategory pricingCategory, SeatAvailability seatAvailability)
         {
             RowName = rowName;
@@ -19,6 +12,11 @@ namespace SeatsSuggestions
             PricingCategory = pricingCategory;
             SeatAvailability = seatAvailability;
         }
+
+        public string RowName { get; }
+        public uint Number { get; }
+        public PricingCategory PricingCategory { get; }
+        public SeatAvailability SeatAvailability { get; }
 
         public bool IsAvailable()
         {
@@ -45,29 +43,14 @@ namespace SeatsSuggestions
             return RowName == seat.RowName && Number == seat.Number;
         }
 
-     
-        protected override IEnumerable<object> GetAllAttributesToBeUsedForEquality()
-        {
-            return new object[] { RowName, Number, PricingCategory, SeatAvailability };
-        }
-
         public override string ToString()
         {
             return $"{RowName}{Number}";
         }
 
-        public bool IsAdjacentWith(List<Seat> seats)
+        protected override IEnumerable<object> GetAllAttributesToBeUsedForEquality()
         {
-            var orderedSeats = seats.OrderBy(s => s.Number).ToList();
-
-            var seat = orderedSeats.First();
-
-            if (Number + 1 == seat.Number || Number - 1 == seat.Number)
-                return true;
-
-            seat = seats.Last();
-
-            return Number + 1 == seat.Number || Number - 1 == seat.Number;
+            return new object[] { RowName, Number, PricingCategory, SeatAvailability };
         }
     }
 }

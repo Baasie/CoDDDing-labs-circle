@@ -6,16 +6,16 @@ using ExternalDependencies;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace SeatsSuggestions
+namespace SeatsSuggestions.Infra.Adapter
 {
     /// <summary>
     ///     Get via a web api and adapt reservations and return <see cref="ReservedSeatsDto" />.
     /// </summary>
-    public class SeatReservationsWebAdapter : IProvideCurrentReservations
+    public class SeatReservationsWebRepository : IProvideCurrentReservations
     {
         private readonly string _uriSeatReservationService;
 
-        public SeatReservationsWebAdapter(string uriSeatReservationService)
+        public SeatReservationsWebRepository(string uriSeatReservationService)
         {
             _uriSeatReservationService = uriSeatReservationService;
         }
@@ -26,7 +26,7 @@ namespace SeatsSuggestions
 
             var reservationsSeatsDto = JsonConvert
                 .DeserializeObject<ReservedSeatsDto>(jsonSeatReservations,
-                    new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+                    new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
             return reservationsSeatsDto;
         }

@@ -62,8 +62,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExternalDependencies\ExternalDependencies.csproj" />
-    <ProjectReference Include="..\SeatsSuggestions.Domain\SeatsSuggestions.Domain.csproj" />
-    <ProjectReference Include="..\SeatsSuggestions.Infra\SeatsSuggestions.Infra.csproj" />
   </ItemGroup>
 
   <ItemGroup>
